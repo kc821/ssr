@@ -39,32 +39,34 @@ public class RestController {
     }
 
     @RequestMapping(path = "/series", method = RequestMethod.GET)
-    public FinalResults generateAndCallNextMs() {
+    public ResponseEntity<FinalResults> generateAndCallNextMs() {
         AllResults allResults = new AllResults(generate());
         HttpEntity<AllResults> allResultsHttpEntity = new HttpEntity<>(allResults);
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         FinalResults finalResults = restTemplate.exchange("http://env-microservice-sort.unicloud.pl/sort", HttpMethod.GET, allResultsHttpEntity, FinalResults.class).getBody();
-        return finalResults;
+        return ResponseEntity.ok(finalResults);
     }
 
     @RequestMapping(path = "/sort", method = RequestMethod.GET)
-    public FinalResults justSort(@RequestBody AllResults allResults) {
+    public ResponseEntity<FinalResults> justSort(@RequestBody AllResults allResults) {
         int[] sortedResults = sort(allResults);
-        return new FinalResults(sortedResults);
+        FinalResults finalResults = new FinalResults(sortedResults);
+        return ResponseEntity.ok(finalResults);
     }
 
     @RequestMapping(path = "/parallel", method = RequestMethod.GET)
-    public FinalResults doAll() {
+    public ResponseEntity<FinalResults> doAll() {
         AllResults allResults = new AllResults(generate());
         int[] sortedResults = sort(allResults);
-        return new FinalResults(sortedResults);
+        FinalResults finalResults = new FinalResults(sortedResults);
+        return ResponseEntity.ok(finalResults);
     }
 
     @RequestMapping(path = "/recallParallel", method = RequestMethod.GET)
-    public FinalResults callDoAll() {
+    public ResponseEntity<FinalResults> callDoAll() {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
         FinalResults finalResults = restTemplate.exchange("http://env-microservice-parallel.unicloud.pl/sort", HttpMethod.GET, HttpEntity.EMPTY, FinalResults.class).getBody();
-        return finalResults;
+        return ResponseEntity.ok(finalResults);
     }
 
     private int[] generate() {

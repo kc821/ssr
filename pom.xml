@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>master.thesis</groupId>
 	<artifactId>ssr</artifactId>
-	<version>0.0.4-SNAPSHOT</version>
+	<version>0.0.5-SNAPSHOT</version>
 	<name>ssr</name>
 	<description>Master thesis app for ssr</description>
 
