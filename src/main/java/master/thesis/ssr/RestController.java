@@ -65,7 +65,7 @@ public class RestController {
     @RequestMapping(path = "/recallParallel", method = RequestMethod.GET)
     public ResponseEntity<FinalResults> callDoAll() {
         RestTemplate restTemplate = new RestTemplateBuilder().build();
-        FinalResults finalResults = restTemplate.exchange("http://env-microservice-parallel.unicloud.pl/sort", HttpMethod.GET, HttpEntity.EMPTY, FinalResults.class).getBody();
+        FinalResults finalResults = restTemplate.exchange("http://env-microservice-parallel.unicloud.pl/parallel", HttpMethod.GET, HttpEntity.EMPTY, FinalResults.class).getBody();
         return ResponseEntity.ok(finalResults);
     }
 
