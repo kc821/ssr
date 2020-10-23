@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Random;
 
 @Controller
@@ -39,7 +38,7 @@ public class RestController {
                 .body(resource);
     }
 
-    @RequestMapping(path = "/microserviceSeries", method = RequestMethod.GET)
+    @RequestMapping(path = "/series", method = RequestMethod.GET)
     public FinalResults generateAndCallNextMs() {
         AllResults allResults = new AllResults(generate());
         HttpEntity<AllResults> allResultsHttpEntity = new HttpEntity<>(allResults);
@@ -54,11 +53,18 @@ public class RestController {
         return new FinalResults(sortedResults);
     }
 
-    @RequestMapping(path = "/microserviceParallel", method = RequestMethod.GET)
+    @RequestMapping(path = "/parallel", method = RequestMethod.GET)
     public FinalResults doAll() {
         AllResults allResults = new AllResults(generate());
         int[] sortedResults = sort(allResults);
         return new FinalResults(sortedResults);
+    }
+
+    @RequestMapping(path = "/recallParallel", method = RequestMethod.GET)
+    public FinalResults callDoAll() {
+        RestTemplate restTemplate = new RestTemplateBuilder().build();
+        FinalResults finalResults = restTemplate.exchange("http://env-microservice-parallel.unicloud.pl/sort", HttpMethod.GET, HttpEntity.EMPTY, FinalResults.class).getBody();
+        return finalResults;
     }
 
     private int[] generate() {
